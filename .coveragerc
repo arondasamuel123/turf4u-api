@@ -1,0 +1,11 @@
+ 
+[run]
+source = .
+omit =
+    manage.py,
+    *\__init__.py,
+    mysite\*,
+    *\migrations\*
+
+[html]
+directory = .coverage.html_report

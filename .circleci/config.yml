@@ -18,9 +18,10 @@ jobs:
       - restore_cache: 
           key: deps9-{{.Branch}}-{{checksum  "Pipfile.lock"}}
       - run:
+          name: Install dependencies
           command:  |
             pip install pipenv
-            pipenv install
+            pipenv install -d
       - save-cache:
           key: deps9-{{ .Branch}}-{{checksum "Pipfile.lock"}}
           paths:
@@ -28,10 +29,13 @@ jobs:
             - "/usr/local/bin"
             - "/usr/local/lib/python3.8/site-packages"
       - run:
+          name: Run tests and generate report 
           command: |
-            pipenv run python manage.py test
-      - store_test_results:
-          path: test-results
+            pipenv run coverage run manage.py test
+            pipenv run coverage html
+      - store_artifacts:
+          path: ".coverage.html_report"
+      
       
 
 
