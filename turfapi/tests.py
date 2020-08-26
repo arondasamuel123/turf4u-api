@@ -7,3 +7,7 @@ class BasicTestCase(TestCase):
         add = 1+2
 
         self.assertEqual(add, 3)
+
+    def test_subtraction(self):
+        subtract = 4-1
+        self.assertEqual(subtract, 3)
