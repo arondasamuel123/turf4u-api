@@ -28,8 +28,6 @@ paths:
       summary: "Add a new oraganization to create a turf"
       description: ""
       operationId: "addOrganization"
-      consumes:
-      - "application/json"
       produces:
       - "application/json"
       parameters:
@@ -74,7 +72,6 @@ paths:
       description: "Returns a single organization"
       operationId: "getOrgById"
       produces:
-      - "application/xml"
       - "application/json"
       parameters:
       - name: "orgId"
@@ -103,7 +100,6 @@ paths:
       consumes:
       - "application/x-www-form-urlencoded"
       produces:
-      - "application/xml"
       - "application/json"
       parameters:
       - name: "orgId"
@@ -132,26 +128,21 @@ paths:
       - "organizations"
       summary: "Deletes an organization"
       description: ""
-      operationId: "deletePet"
+      operationId: "deleteOrganization"
       produces:
-      - "application/xml"
       - "application/json"
       parameters:
-      - name: "api_key"
-        in: "header"
-        required: false
-        type: "string"
+      
       - name: "orgId"
         in: "path"
-        description: "Pet id to delete"
+        description: "Organization id to delete"
         required: true
-        type: "integer"
-        format: "int64"
+        type: "string"
       responses:
         "400":
-          description: "Invalid ID supplied"
+          description: "Invalid orgId supplied"
         "404":
-          description: "Pet not found"
+          description: "Organization not found"
       security:
       - BasicAuth: []
   
@@ -207,7 +198,7 @@ paths:
       tags:
       - "turfs"
       summary: "Find turf by ID"
-      description: "For valid response try integer IDs with value >= 1 and <= 10.         Other values will generated exceptions"
+      description: "ID will be randomly generated UUID numbers"
       operationId: "getTurfById"
       produces:
       - "application/xml"
@@ -217,10 +208,8 @@ paths:
         in: "path"
         description: "ID of turf that needs to be fetched"
         required: true
-        type: "integer"
-        maximum: 10.0
-        minimum: 1.0
-        format: "int64"
+        type: "string"
+
       responses:
         "200":
           description: "successful operation"
@@ -236,7 +225,7 @@ paths:
       tags:
       - "turfs"
       summary: "Delete turf by ID"
-      description: "For valid response try integer IDs with positive integer value.         Negative or non-integer values will generate API errors"
+      description: "ID will be randomly generated UUID numbers"
       operationId: "deleteOrder"
       produces:
       - "application/xml"
@@ -246,9 +235,7 @@ paths:
         in: "path"
         description: "ID of the turf that needs to be deleted"
         required: true
-        type: "integer"
-        minimum: 1.0
-        format: "int64"
+        type: "string"
       responses:
         "400":
           description: "Invalid ID supplied"
@@ -300,7 +287,6 @@ paths:
       description: "This can only be done by the logged in user."
       operationId: "createUser"
       produces:
-      - "application/xml"
       - "application/json"
       parameters:
       - in: "body"
@@ -322,7 +308,6 @@ paths:
       description: ""
       operationId: "loginUser"
       produces:
-      - "application/xml"
       - "application/json"
       parameters:
       - name: "username"
@@ -359,7 +344,6 @@ paths:
       description: ""
       operationId: "logoutUser"
       produces:
-      - "application/xml"
       - "application/json"
       parameters: []
       responses:
@@ -374,7 +358,6 @@ paths:
       description: ""
       operationId: "getUserByName"
       produces:
-      - "application/xml"
       - "application/json"
       parameters:
       - name: "userId"
@@ -428,7 +411,6 @@ paths:
       description: "This can only be done by the logged in user."
       operationId: "deleteUser"
       produces:
-      - "application/xml"
       - "application/json"
       parameters:
       - name: "userId"
