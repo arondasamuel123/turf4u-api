@@ -1,0 +1,648 @@
+swagger: "2.0"
+info:
+  description: "This is a sample Turf4uAPI server."
+  version: "1.0.0"
+  title: "Swagger Turf4U API"
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "apiteam@swagger.io"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "turf4u-sandbox.herokuapp.com"
+basePath: "/v1"
+tags:
+- name: "user"
+  description: "Operations about user"
+  externalDocs:
+    description: "Find out more about our store"
+    url: "http://swagger.io"
+schemes:
+- "https"
+- "http"
+paths:
+  /organizations:
+    post:
+      tags:
+      - "organizations"
+      summary: "Add a new oraganization to create a turf"
+      description: ""
+      operationId: "addOrganization"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Organization object that needs to be created "
+        required: true
+        schema:
+          $ref: "#/definitions/Organization"
+      responses:
+        "405":
+          description: "Invalid input"
+      security:
+      - BasicAuth: []
+    
+    get:
+      tags:
+      - "organizations"
+      summary: "Returns a list of organizations"
+      description: "Returns list of organizations created"
+      operationId: "getOrganizations"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+              type: "array"
+              items:
+                $ref: '#/definitions/Organization'
+      security:
+      - BasicAuth: []
+    
+  
+  
+  /organization/{orgId}:
+    get:
+      tags:
+      - "organizations"
+      summary: "Find organiztion by ID"
+      description: "Returns a single organization"
+      operationId: "getOrgById"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "orgId"
+        in: "path"
+        description: "ID of pet to return"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Organization"
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Organization not found"
+      security:
+      - BasicAuth: []
+    put:
+      tags:
+      - "organizations"
+      summary: "Updates a pet in the store with form data"
+      description: ""
+      operationId: "updatePetWithForm"
+      consumes:
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "orgId"
+        in: "path"
+        description: "ID of pet that needs to be updated"
+        required: true
+        type: "integer"
+        format: "int64"
+      - name: "name"
+        in: "formData"
+        description: "Updated name of the pet"
+        required: false
+        type: "string"
+      - name: "status"
+        in: "formData"
+        description: "Updated status of the pet"
+        required: false
+        type: "string"
+      responses:
+        "405":
+          description: "Invalid input"
+      security:
+      - BasicAuth: []
+    delete:
+      tags:
+      - "organizations"
+      summary: "Deletes an organization"
+      description: ""
+      operationId: "deletePet"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "api_key"
+        in: "header"
+        required: false
+        type: "string"
+      - name: "orgId"
+        in: "path"
+        description: "Pet id to delete"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Pet not found"
+      security:
+      - BasicAuth: []
+  
+      
+  /turfs:
+    get:
+      tags:
+      - "turfs"
+      summary: "Returns turfs created by organizations"
+      description: "Returns list of turfs that are available"
+      operationId: "getTurfs"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+              type: "array"
+              items:
+                $ref: '#/definitions/Turf'
+            
+      security:
+      - BasicAuth: []
+  /turfs/create:
+    post:
+      tags:
+      - "turfs"
+      summary: "Create a turf "
+      description: ""
+      operationId: "CreateTurf"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Turf created"
+        required: true
+        schema:
+          $ref: '#/definitions/Turf'
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Turf"
+        "400":
+          description: "Invalid Turf creation"
+      security:
+      - BasicAuth: []
+  /turf/{turfId}:
+    get:
+      tags:
+      - "turfs"
+      summary: "Find turf by ID"
+      description: "For valid response try integer IDs with value >= 1 and <= 10.         Other values will generated exceptions"
+      operationId: "getTurfById"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "turfId"
+        in: "path"
+        description: "ID of turf that needs to be fetched"
+        required: true
+        type: "integer"
+        maximum: 10.0
+        minimum: 1.0
+        format: "int64"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Turf"
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Turf not found"
+      security:
+      - BasicAuth: []
+    delete:
+      tags:
+      - "turfs"
+      summary: "Delete turf by ID"
+      description: "For valid response try integer IDs with positive integer value.         Negative or non-integer values will generate API errors"
+      operationId: "deleteOrder"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "turfId"
+        in: "path"
+        description: "ID of the turf that needs to be deleted"
+        required: true
+        type: "integer"
+        minimum: 1.0
+        format: "int64"
+      responses:
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Turf not found"
+      security:
+      - BasicAuth: []
+  /turf/{turfId}/uploadImage:
+    post:
+      tags:
+      - "turfs"
+      summary: "uploads an image"
+      description: ""
+      operationId: "uploadFile"
+      consumes:
+      - "multipart/form-data"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "turfId"
+        in: "path"
+        description: "ID of turf to update"
+        required: true
+        type: "integer"
+        format: "int64"
+      - name: "additionalMetadata"
+        in: "formData"
+        description: "Additional data to pass to server"
+        required: false
+        type: "string"
+      - name: "file"
+        in: "formData"
+        description: "file to upload"
+        required: false
+        type: "file"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+      security:
+      - BasicAuth: []
+    
+  /user:
+    post:
+      tags:
+      - "user"
+      summary: "Create user"
+      description: "This can only be done by the logged in user."
+      operationId: "createUser"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Created user object"
+        required: true
+        schema:
+          $ref: "#/definitions/User"
+      responses:
+        default:
+          description: "successful operation"
+  
+
+  /user/login:
+    post:
+      tags:
+      - "user"
+      summary: "Logs user into the system"
+      description: ""
+      operationId: "loginUser"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "username"
+        in: "query"
+        description: "The user name for login"
+        required: true
+        type: "string"
+      - name: "password"
+        in: "query"
+        description: "The password for login in clear text"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "string"
+          headers:
+            X-Rate-Limit:
+              type: "integer"
+              format: "int32"
+              description: "calls per hour allowed by the user"
+            X-Expires-After:
+              type: "string"
+              format: "date-time"
+              description: "date in UTC when token expires"
+        "400":
+          description: "Invalid username/password supplied"
+  /user/logout:
+    get:
+      tags:
+      - "user"
+      summary: "Logs out current logged in user session"
+      description: ""
+      operationId: "logoutUser"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters: []
+      responses:
+        default:
+          description: "successful operation"
+      
+  /user/{userId}:
+    get:
+      tags:
+      - "user"
+      summary: "Get user by user name"
+      description: ""
+      operationId: "getUserByName"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "The name that needs to be fetched. Use user1 for testing. "
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/User"
+        "400":
+          description: "Invalid username supplied"
+        "404":
+          description: "User not found"
+      
+      security:
+      - BasicAuth: []
+    put:
+      tags:
+      - "user"
+      summary: "Updated user"
+      description: "This can only be done by the logged in user."
+      operationId: "updateUser"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "name that need to be updated"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "Updated user object"
+        required: true
+        schema:
+          $ref: "#/definitions/User"
+      responses:
+        "400":
+          description: "Invalid user supplied"
+        "404":
+          description: "User not found"
+      security:
+      - BasicAuth: []
+    delete:
+      tags:
+      - "user"
+      summary: "Delete user"
+      description: "This can only be done by the logged in user."
+      operationId: "deleteUser"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "The name that needs to be deleted"
+        required: true
+        type: "string"
+      responses:
+        "400":
+          description: "Invalid username supplied"
+        "404":
+          description: "User not found"
+      security:
+      - BasicAuth: []
+  
+  /schedule/{turfId}:
+    post:
+      tags:
+      - "timeslots"
+      summary: "Create timeslots for a specific turf"
+      description: ""
+      operationId: "timeslotsforTurf"
+  
+      produces:
+      - "application/json"
+      parameters:
+      - name: "turfId"
+        in: "path"
+        description: "ID of turf to update"
+        required: true
+        type: "string"
+     
+      - name: "body"
+        in: "body"
+        description: "Created timeslot  object"
+        required: true
+        schema:
+          $ref: "#/definitions/TimeSlots"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+      security:
+      - BasicAuth: []
+    get:
+      tags:
+      - "timeslots"
+      summary: "Get timeslots by turf id"
+      description: ""
+      operationId: "getTimeSlotsByTurfId"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "turfId"
+        in: "path"
+        description: "ID of booking based on turf"
+        required: true
+        type: "string"
+        
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+              type: "array"
+              items:
+                $ref: '#/definitions/TimeSlots'
+        "400":
+          description: "Invalid turfId supplied"
+        "404":
+          description: "turfId not found"
+      security:
+      - BasicAuth: []
+          
+    put:
+      tags:
+      - "timeslots"
+      summary: "Updated timeslots by turf id "
+      description: "This can only be done by the logged in turf manager"
+      operationId: "updateTimeslots"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "turfId"
+        in: "path"
+        description: "ID of turf to update"
+        required: true
+        type: "string"
+     
+      - in: "body"
+        name: "body"
+        description: "Updated timeslot object"
+        required: true
+        schema:
+          $ref: "#/definitions/TimeSlots"
+      responses:
+        "400":
+          description: "Invalid turf id supplied"
+        "404":
+          description: "Turf not found"
+      security:
+      - BasicAuth: []
+    delete:
+      tags:
+      - "timeslots"
+      summary: "Delete timeslots by turf id "
+      description: "This can only be done by the logged in by turf manager."
+      operationId: "deleteTimeslotsbyTurfId"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "turfId"
+        in: "path"
+        description: "ID of booking based on user"
+        required: true
+        type: "string"
+      responses:
+        "400":
+          description: "Invalid userId supplied"
+        "404":
+          description: "UserId not found"
+      security:
+      - BasicAuth: []
+          
+    
+    
+          
+securityDefinitions:
+  BasicAuth:
+    type: basic
+definitions:
+  Turf:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      userId:
+        type: "integer"
+        format: "int64"
+      turf_name:
+        type: "string"
+      turf_location:
+        type: "string"
+      turf_image:
+        type: "string"
+      orgId:
+        type: "integer"
+        format: "int64"
+      
+    xml:
+      name: "Turf"
+  Organization:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      organiztion_name:
+        type: "string"
+      contact_number:
+        type: "string"
+      organization_email:
+        type: "string"
+        
+    xml:
+      name: "Organization"
+  User:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      email:
+        type: "string"
+      password:
+        type: "string"
+      userRole:
+        type: "string"
+        description: "User Role"
+        enum:
+        - "Turf User"
+        - "Turf Manager"
+        
+    xml:
+      name: "User"
+ 
+      
+  
+  TimeSlots:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      turfId:
+        type: "integer"
+        format: "int64"
+      timeslot:
+        type: "string"
+        format: "time"
+      isbooked:
+        type: "boolean"
+        
+  ApiResponse:
+    type: "object"
+    properties:
+      code:
+        type: "integer"
+        format: "int32"
+      type:
+        type: "string"
+      message:
+        type: "string"
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"
