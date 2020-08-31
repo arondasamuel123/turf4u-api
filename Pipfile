@@ -8,6 +8,8 @@ coverage = "*"
 
 [packages]
 django = "*"
+python-decouple = "*"
+psycopg2 = "*"
 
 [requires]
 python_version = "3.8"
