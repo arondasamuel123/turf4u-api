@@ -5,8 +5,8 @@ jobs:
       - image: circleci/python:3.8
         environment:
           PIPENV_VENV_IN_PROJECT: true
-          DATABASE_URL: postgres://postgres:postgres@localhost:5432/circle_test
-          MODE: 'testing'
+          TEST_DATABASE_URL: postgres://postgres:postgres@localhost:5432/circle_test
+          MODE: test
       - image: circleci/postgres:latest
         environment:
           POSTGRES_USER: root
