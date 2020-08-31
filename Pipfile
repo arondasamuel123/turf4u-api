@@ -5,11 +5,11 @@ verify_ssl = true
 
 [dev-packages]
 coverage = "*"
-python-decouple = "*"
 
 [packages]
 django = "*"
 psycopg2 = "*"
+python-decouple = "*"
 
 [requires]
 python_version = "3.8"
