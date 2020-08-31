@@ -6,7 +6,7 @@ jobs:
         environment:
           PIPENV_VENV_IN_PROJECT: true
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/circle_test
-          SECRET_KEY: secretkey_password
+          
       - image: circleci/postgres:latest
         environment:
           POSTGRES_USER: root
