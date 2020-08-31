@@ -27,7 +27,7 @@ DEBUG = config('DEBUG')
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
 
-
+MODE = config('MODE', default='development')
 # Application definition
 
 INSTALLED_APPS = [

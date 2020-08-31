@@ -5,7 +5,8 @@ jobs:
       - image: circleci/python:3.8
         environment:
           PIPENV_VENV_IN_PROJECT: true
-
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/circle_test
+          MODE: 'testing'
       - image: circleci/postgres:latest
         environment:
           POSTGRES_USER: root
@@ -21,9 +22,7 @@ jobs:
           name: Install dependencies
           command:  |
             pip install pipenv
-            pipenv install
             pipenv install -d
-            
       - save-cache:
           key: deps9-{{ .Branch}}-{{checksum "Pipfile.lock"}}
           paths:
