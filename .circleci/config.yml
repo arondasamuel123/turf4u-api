@@ -3,6 +3,16 @@ jobs:
   build:
     docker:
       - image: circleci/python:3.8
+        environment:
+          PIPENV_VENV_IN_PROJECT: true
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/circle_test
+          SECRET_KEY: testkey
+          DATABASE_USER: postgres
+          DATABASE_NAME: circle_test
+          DATABASE_PASSWORD: postgres
+          DEBUG: TRUE
+          ALLOWED_HOSTS: .com
+          
       - image: circleci/postgres:latest
         environment:
           POSTGRES_USER: root

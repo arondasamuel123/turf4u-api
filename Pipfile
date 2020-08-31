@@ -5,10 +5,10 @@ verify_ssl = true
 
 [dev-packages]
 coverage = "*"
+python-decouple = "*"
 
 [packages]
 django = "*"
-python-decouple = "*"
 psycopg2 = "*"
 
 [requires]
