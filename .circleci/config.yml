@@ -21,7 +21,9 @@ jobs:
           name: Install dependencies
           command:  |
             pip install pipenv
+            pipenv install
             pipenv install -d
+            
       - save-cache:
           key: deps9-{{ .Branch}}-{{checksum "Pipfile.lock"}}
           paths:
