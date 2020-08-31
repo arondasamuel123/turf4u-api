@@ -30,6 +30,14 @@ jobs:
             - "/usr/local/bin"
             - "/usr/local/lib/python3.8/site-packages"
       - run:
+          name: install dockerize
+          command: wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && sudo tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+          environment:
+            DOCKERIZE_VERSION: v0.3.0
+      - run:
+          name: Wait for db
+          command: dockerize -wait tcp://localhost:5432 -timeout lm 
+      - run:
           name: Run tests and generate report 
           command: |
             pipenv run coverage run --source . --omit=*/venv/*,*/migrations/* manage.py test
