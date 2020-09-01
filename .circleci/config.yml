@@ -4,7 +4,7 @@ jobs:
     docker:
       - image: circleci/python:3.8
         environment:
-          DATABASE_URL: postgres://postgres:postgres@localhost:5432/circle_test
+          DATABASE_URL: postgres://root:postgres@localhost:5432/circle_test
       - image: circleci/postgres:latest
         environment:
           POSTGRES_USER: root
@@ -34,7 +34,7 @@ jobs:
             DOCKERIZE_VERSION: v0.3.0
       - run:
           name: Wait for db
-          command: dockerize -wait tcp://localhost:5432 -timeout 3m 
+          command: dockerize -wait tcp://localhost:5432 -timeout 1m 
       - run:
           name: Run tests and generate report 
           command: |
