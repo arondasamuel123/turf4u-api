@@ -1,0 +1,12 @@
+[flake8]
+ignore =
+    E402 // module level import not at top of file
+    W605 // invalid escape sequence
+max-line-length = 100
+max-complexity = 18
+exclude =
+    .git,
+    __init__.py
+    __pycache__,
+    mysite\settings.py,
+    migrations
