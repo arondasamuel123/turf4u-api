@@ -1,8 +1,9 @@
 import uuid
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, \
-                                       BaseUserManager
-# from django.conf import settings
+    BaseUserManager
+from django.conf import settings
+from django.utils import timezone
 
 
 class UserManager(BaseUserManager):
@@ -23,48 +24,42 @@ class User(AbstractBaseUser, PermissionsMixin):
     """
     Custom user model that supports using email instead of username
     """
-    TURF_USER = 'TURF_USER'
-    TURF_MANAGER = 'TURF_MANAGER'
-    ROLE_TYPE_CHOICES = [
-        (TURF_USER, 'TURF_USER'),
-        (TURF_MANAGER, 'TURF_MANAGER')
-    ]
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
+    id = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False)
     email = models.EmailField(max_length=255, unique=True)
     name = models.CharField(max_length=255)
     is_active = models.BooleanField(default=True)
-    role_type = models.CharField(
-        choices=ROLE_TYPE_CHOICES,
-        max_length=12,
-        default=TURF_USER)
+    is_manager = models.BooleanField(default=False)
 
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
 
 
-# class Organization(models.Model):
-#     id = models.UUIDField(
-#     primary_key=True,
-#     default=uuid.uuid4,
-#     editable=False)
-#     organization_name = models.CharField(max_length=255)
-#     organization_email = models.CharField(max_length=255)
-#     contact_number = models.CharField(max_length=255)
-#     user = models.ForeignKey(
-#     settings.AUTH_USER_MODEL,
-#     on_delete=models.CASCADE)
+class Organization(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    organization_name = models.CharField(max_length=255)
+    organization_email = models.CharField(max_length=255)
+    contact_number = models.CharField(max_length=255)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE)
+    org_created = models.DateTimeField(default=timezone.now)
 
 
-# class Turf(models.Model):
-#     id = models.UUIDField(
-#     primary_key=True,
-#     default=uuid.uuid4,
-#     editable=False)
-#     turf_name = models.CharField(max_length=255)
-#     turf_location = models.CharField(max_length=255)
-#     turf_image = models.ImageField(nullable=True)
-#     org_id = models.ForeignKey(Organization, on_delete=models.CASCADE)
+class Turf(models.Model):
+    id = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False)
+    turf_name = models.CharField(max_length=255)
+    turf_location = models.CharField(max_length=255)
+    turf_image = models.CharField(max_length=255)
+    org = models.ForeignKey(Organization, on_delete=models.CASCADE)
+    turf_created = models.DateTimeField(default=timezone.now)
 
 
 # class Timeslots(models.Model):

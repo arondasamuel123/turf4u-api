@@ -37,7 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'turfapi'
+    'rest_framework',
+    'rest_framework.authtoken',
+    'turfapi',
+    'turf'
 ]
 
 MIDDLEWARE = [
@@ -98,8 +101,7 @@ else:
             default=config('DATABASE_URL')
         )
     }
-db_from_env = dj_database_url.config(conn_max_age=5000)
-DATABASES['default'].update(db_from_env)
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -125,7 +127,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Africa/Nairobi'
 
 USE_I18N = True
 
