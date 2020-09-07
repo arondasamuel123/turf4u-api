@@ -6,7 +6,7 @@ from . import views
 urlpatterns = [
     # Turf endpoints
     path('turfs/', views.ListTurfs.as_view(), name='turf-list'),
-    path('turfs/create', views.CreateTurf.as_view(), name='turf-create'),
+    path('turfs/create/<str:pk>', views.CreateTurf.as_view(), name='turf-create'),
     path('turfs/org/<str:pk>', views.RetrieveTurfByOrg.as_view(), name='turf-get-org'),
 
     # Organization endpoints
