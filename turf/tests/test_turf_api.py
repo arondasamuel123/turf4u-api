@@ -8,11 +8,14 @@ from turf.serializers import TurfSerializer
 
 
 TURF_URL = reverse('turf-list')
-CREATE_TURF_URL = reverse('turf-create')
 
 
 def get_turf_by_org(org_id):
     return reverse('turf-get-org', args=[org_id])
+
+
+def create_turf_by_org(org_id):
+    return reverse('turf-create', args=[org_id])
 
 
 class PublicAPITestCase(TestCase):
@@ -79,7 +82,9 @@ class PrivateAPITestCase(TestCase):
             "turf_image": "/uploads/images/green.jpg",
             "org": self.org.id
         }
-        res = self.client.post(CREATE_TURF_URL, self.payload)
+        url = create_turf_by_org(self.org.id)
+
+        res = self.client.post(url, self.payload)
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
 
     def test_invalid_turf(self):
@@ -92,7 +97,8 @@ class PrivateAPITestCase(TestCase):
             "turf_image": "/uploads/images/test.jpg",
             "org": self.org.id
         }
-        res = self.client.post(CREATE_TURF_URL, self.payload)
+        url = create_turf_by_org(self.org.id)
+        res = self.client.post(url, self.payload)
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_retrieve_turf_limited_to_org(self):
@@ -131,18 +137,18 @@ class PrivateAPITestCase(TestCase):
             "turf_name": "The hub Turf",
             "turf_location": "Lubowa",
             "turf_image": "upload/cloudinary/hub.png",
-            "org": self.org.id,
-            # "turf_created": timezone.now()
+            "org": self.org.id
         }
         payload_two = {
             "turf_name": payload['turf_name'],
             "turf_location": payload['turf_location'],
             "turf_image": payload['turf_image'],
-            "org": payload['org'],
-            # "turf_created": payload['turf_created']
+            "org": payload['org']
         }
-        res_one = self.client.post(CREATE_TURF_URL, payload)
-        res_two = self.client.post(CREATE_TURF_URL, payload_two)
+        url = create_turf_by_org(self.org.id)
+
+        res_one = self.client.post(url, payload)
+        res_two = self.client.post(url, payload_two)
         self.assertEqual(res_one.status_code, status.HTTP_201_CREATED)
         self.assertEqual(res_two.status_code, status.HTTP_400_BAD_REQUEST)
 
@@ -174,5 +180,6 @@ class IsManagerPermissionTestCase(TestCase):
             "org": self.org.id,
 
         }
-        res = self.client.post(CREATE_TURF_URL, payload)
+        url = create_turf_by_org(self.org.id)
+        res = self.client.post(url, payload)
         self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)

@@ -1,5 +1,5 @@
 from django.apps import AppConfig
 
 
-class TurfapiConfig(AppConfig):
+class TurfConfig(AppConfig):
     name = 'turf'

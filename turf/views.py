@@ -25,6 +25,13 @@ class CreateTurf(generics.CreateAPIView):
     authentication_classes = [TokenAuthentication, ]
     permission_classes = [IsAuthenticated, IsTurfManager]
 
+    def create(self, request, pk):
+        organization = Organization.objects.get(pk=pk)
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(org=organization)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
 
 class RetrieveTurfByOrg(generics.RetrieveAPIView):
     """
@@ -32,7 +39,7 @@ class RetrieveTurfByOrg(generics.RetrieveAPIView):
     an organization
     """
     authentication_classes = [TokenAuthentication, ]
-    permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated, IsTurfManager, ]
 
     def get(self, request, pk):
         organization = Organization.objects.get(pk=pk)
@@ -49,6 +56,9 @@ class CreateOrg(generics.CreateAPIView):
     serializer_class = OrgSerializer
     authentication_classes = [TokenAuthentication, ]
     permission_classes = [IsAuthenticated, IsTurfManager, ]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 
 class RetrieveUpdateOrg(generics.RetrieveUpdateAPIView):
