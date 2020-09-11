@@ -19,6 +19,7 @@ class OrgSerializer(serializers.ModelSerializer):
             'id',
             'organization_email',
             'organization_name',
+            'organization_location',
             'contact_number',
             'user',
             'org_created'
@@ -43,11 +44,11 @@ class TurfSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Turf
-        fields = ['id', 'turf_name', 'turf_location', 'turf_image', 'org', 'turf_created']
+        fields = ['id', 'turf_name', 'no_of_pitches', 'turf_image', 'org', 'turf_created']
         read_only_field = ['org', 'id', ]
         validators = [
             UniqueTogetherValidator(
-                fields=['turf_name', 'turf_location'],
+                fields=['turf_name', 'turf_created'],
                 queryset=Turf.objects.all(),
                 message="Turf already exists"
             )

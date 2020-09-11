@@ -1,7 +1,8 @@
 from django.test import TestCase
-# from django.contrib.auth import get_user_model
-from turfapi.models import User, Organization, Turf
-# from unittest.mock import patch
+import datetime
+
+from turfapi.models import User, Organization, Turf,\
+    Timeslots
 
 
 def sample_user(email='test@gmail.com', password='testpass'):
@@ -56,6 +57,7 @@ class TurfModelTestCase(TestCase):
         self.test_organization = Organization.objects.create(
             organization_name='Test Organization',
             organization_email='organization@gmail.com',
+            organization_location='Test Location',
             contact_number='+254712345678',
             user=sample_user()
 
@@ -64,7 +66,7 @@ class TurfModelTestCase(TestCase):
     def test_create_turf(self):
         turf = Turf.objects.create(
             turf_name="GreenSports Turf",
-            turf_location="Valley Arcade",
+            no_of_pitches=2,
             turf_image="/upload/images/greensports.jpg",
             org=self.test_organization
         )
@@ -72,3 +74,34 @@ class TurfModelTestCase(TestCase):
         self.assertEqual(turf.turf_name, 'GreenSports Turf')
         self.assertTrue(str(turf), turf.turf_name)
         self.assertEqual(turf.org.organization_name, 'Test Organization')
+
+
+class TimeslotsModelTestCase(TestCase):
+    """
+    Test for creating Timeslots str
+    representation
+    """
+    def setUp(self):
+        self.test_org = Organization.objects.create(
+            organization_name='Manarat School',
+            organization_email='manarat#gmail.com',
+            organization_location='Kilimani',
+            contact_number="+254123456789",
+            user=sample_user()
+        )
+        self.test_turf = Turf.objects.create(
+            turf_name='Manarat School',
+            no_of_pitches=2,
+            turf_image='/images/manarat.png',
+            org=self.test_org
+        )
+
+    def test_create_timeslots(self):
+        timeslot = Timeslots.objects.create(
+            start_time=datetime.time(8, 00),
+            stop_time=datetime.time(9, 00),
+            price=9000,
+            turf=self.test_turf
+        )
+        self.assertTrue(str(timeslot), timeslot.start_time)
+        self.assertEqual(timeslot.start_time, datetime.time(8, 00))

@@ -46,6 +46,7 @@ class PrivateAPITestCase(TestCase):
         self.org = Organization.objects.create(
             organization_name='Test Organization',
             organization_email='testorg@gmail.com',
+            organization_location='Test Location',
             contact_number='+254791019910',
             user=self.user
         )
@@ -59,6 +60,7 @@ class PrivateAPITestCase(TestCase):
         self.payload = {
             "organization_name": "TurfEntertainment",
             "organization_email": "ent@turfent.com",
+            "organization_location": "Lubowa,Kampala",
             "contact_number": "+256772471503",
             "user": self.user.id
         }
@@ -72,6 +74,7 @@ class PrivateAPITestCase(TestCase):
         self.payload = {
             "organization_name": "TurfGalore",
             "organization_email": "galore@gmail.com",
+            "organization_location": "Kololo",
             "contact_number": "",
             "user": self.user.id
         }
@@ -105,6 +108,7 @@ class PrivateAPITestCase(TestCase):
         Organization.objects.create(
             organization_name="Arena One",
             organization_email="arenaone@gmail.com",
+            organization_location="Valley Arcade,Kilimani",
             contact_number="+2547684854",
             user=self.user_two
         )
@@ -120,12 +124,14 @@ class PrivateAPITestCase(TestCase):
         payload = {
             "organization_name": "Second Organizaton",
             "organization_email": "second@gmail.com",
+            "organization_location": "Second Location",
             "contact_number": "+256123456789",
             "user": self.user.id
         }
         payload_two = {
             "organization_name": payload['organization_name'],
             "organization_email": payload['organization_email'],
+            "organization_location": payload['organization_location'],
             "contact_number": payload['contact_number'],
             "user": payload['user']
         }
@@ -157,6 +163,7 @@ class IsManagerPermissionTestCase(TestCase):
         payload = {
             "organization_name": "Arena Kampala",
             "organization_email": "arenakla@gmail.com",
+            "organization_location": "FreedomCity,Entebbe Road",
             "contact_number": "+256123456789",
             "user": self.turf_user.id
         }

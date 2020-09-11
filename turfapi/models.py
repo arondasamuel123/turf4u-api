@@ -43,6 +43,10 @@ class Organization(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     organization_name = models.CharField(max_length=255)
     organization_email = models.CharField(max_length=255)
+    organization_location = models.CharField(
+        max_length=255,
+        default='Default Location'
+    )
     contact_number = models.CharField(max_length=255)
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -56,21 +60,32 @@ class Turf(models.Model):
         default=uuid.uuid4,
         editable=False)
     turf_name = models.CharField(max_length=255)
-    turf_location = models.CharField(max_length=255)
+    no_of_pitches = models.IntegerField(default=1)
     turf_image = models.CharField(max_length=255)
     org = models.ForeignKey(Organization, on_delete=models.CASCADE)
     turf_created = models.DateTimeField(default=timezone.now)
 
 
-# class Timeslots(models.Model):
-#     id = models.UUIDField(
-#     primary_key=True,
-#     default=uuid.uuid4,
-#     editable=False)
-#     turf_id = models.ForeignKey(Turf, on_delete=models.CASCADE)
-#     timeslot = models.CharField(max_length=255)
-#     price = models.DecimalField(max_digits=5, decimal_places=2)
-#     is_booked = models.BooleanField(default=False)
-#     user = models.ForeignKey(
-#     settings.AUTH_USER_MODEL,
-#     on_delete=models.CASCADE)
+class Timeslots(models.Model):
+    id = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False)
+    turf = models.ForeignKey(Turf, on_delete=models.CASCADE)
+    start_time = models.TimeField(default=timezone.now)
+    stop_time = models.TimeField(default=timezone.now)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+
+
+class Booking(models.Model):
+    id = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False
+    )
+    timeslot = models.ForeignKey(
+        Timeslots,
+        on_delete=models.CASCADE
+    )
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    date_booked = models.DateField(default=timezone.now)
