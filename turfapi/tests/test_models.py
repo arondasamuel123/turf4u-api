@@ -91,7 +91,7 @@ class TimeslotsModelTestCase(TestCase):
     def setUp(self):
         self.test_org = Organization.objects.create(
             organization_name='Manarat School',
-            organization_email='manarat#gmail.com',
+            organization_email='manarat@gmail.com',
             organization_location='Kilimani',
             contact_number="+254123456789",
             user=sample_user()

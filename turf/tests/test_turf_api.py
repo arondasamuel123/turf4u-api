@@ -157,6 +157,12 @@ class PrivateAPITestCase(TestCase):
         self.assertEqual(res_one.status_code, status.HTTP_201_CREATED)
         self.assertEqual(res_two.status_code, status.HTTP_400_BAD_REQUEST)
 
+    def tearDown(self):
+        self.org.delete()
+        self.user.delete()
+        Turf.objects.all().delete()
+        Organization.objects.all().delete()
+
 
 class IsManagerPermissionTestCase(TestCase):
     def setUp(self):
@@ -189,3 +195,7 @@ class IsManagerPermissionTestCase(TestCase):
         url = create_turf_by_org(self.org.id)
         res = self.client.post(url, payload)
         self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
+
+    def tearDown(self):
+        self.turf_user.delete()
+        self.org.delete()
