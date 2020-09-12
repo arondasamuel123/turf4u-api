@@ -67,6 +67,19 @@ class PrivateAPITestCase(TestCase):
         res = self.client.post(ORG_URL, self.payload)
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
 
+    def test_check_invalid_email(self):
+        """
+        Check to see if user has entered invalid email
+        """
+        payload = {
+            "organization_name": "Astro Turf Ltd",
+            "organization_email": "astro#gmail.com",
+            "organization_location": "Kololo",
+            "contact_number": "+25673423456"
+        }
+        res = self.client.post(ORG_URL, payload)
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+
     def test_create_invalid_org(self):
         """
         Creating invalid organization
@@ -141,6 +154,11 @@ class PrivateAPITestCase(TestCase):
         self.assertEqual(res_one.status_code, status.HTTP_201_CREATED)
         self.assertEqual(res_two.status_code, status.HTTP_400_BAD_REQUEST)
 
+    def tearDown(self):
+        self.user.delete()
+        self.org.delete()
+        Organization.objects.all().delete()
+
 
 class IsManagerPermissionTestCase(TestCase):
     """
@@ -169,3 +187,6 @@ class IsManagerPermissionTestCase(TestCase):
         }
         res = self.client.post(ORG_URL, payload)
         self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
+
+    def tearDown(self):
+        self.turf_user.delete()

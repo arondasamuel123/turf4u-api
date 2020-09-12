@@ -43,10 +43,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 class Organization(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     organization_name = models.CharField(max_length=255)
-    organization_email = models.CharField(max_length=255)
+    organization_email = models.EmailField(max_length=255, unique=True)
     organization_location = models.CharField(
-        max_length=255,
-        default='Default Location'
+        max_length=255
     )
     contact_number = models.CharField(max_length=255)
     user = models.ForeignKey(

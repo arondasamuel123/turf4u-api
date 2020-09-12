@@ -1,8 +1,7 @@
 from django.utils import timezone
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
-from turfapi.models import Turf, Organization, User
-# from user.serializers import UserSerializer
+from turfapi.models import Turf, Organization
 
 
 class OrgSerializer(serializers.ModelSerializer):
@@ -10,7 +9,7 @@ class OrgSerializer(serializers.ModelSerializer):
     Serializer class for Organization Model
     """
     org_created = serializers.DateTimeField(default=timezone.now, required=False)
-    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    user = serializers.ReadOnlyField(source='user.id')
     organization_email = serializers.EmailField(required=False)
 
     class Meta:
@@ -40,7 +39,7 @@ class TurfSerializer(serializers.ModelSerializer):
     """
     turf_created = serializers.DateTimeField(default=timezone.now, required=False)
     turf_image = serializers.CharField(required=False)
-    org = OrgSerializer(read_only=True)
+    org = serializers.ReadOnlyField(source='org.id')
 
     class Meta:
         model = Turf
