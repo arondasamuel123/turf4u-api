@@ -18,5 +18,17 @@ urlpatterns = [
         'timeslot/turf/<str:pk>',
         views.RetrieveTimeslotByTurf.as_view(),
         name='get-timeslots-turf'
+    ),
+    path('book/<str:pk>', views.MakeBooking.as_view(), name="make-booking"),
+
+    path(
+        'bookings/<str:pk>',
+        views.ReadUpdateDeleteBooking.as_view(),
+        name='read-update-delete-bookings'
+    ),
+    path(
+        'user/bookings/',
+        views.ListBookingsByUser.as_view(),
+        name='list-user-bookings'
     )
 ]

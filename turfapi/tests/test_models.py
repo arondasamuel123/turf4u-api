@@ -2,7 +2,7 @@ from django.test import TestCase
 import datetime
 
 from turfapi.models import User, Organization, Turf,\
-    Timeslots
+    Timeslots, Booking
 
 
 def sample_user(email='test@gmail.com', password='testpass'):
@@ -30,6 +30,9 @@ class UserModelTests(TestCase):
         """Test creating with no email should raise an error"""
         with self.assertRaises(ValueError):
             User.objects.create_user(None, 'test123')
+
+    def tearDown(self):
+        User.objects.all().delete()
 
 
 class OrganizationModelTestCase(TestCase):
@@ -75,6 +78,10 @@ class TurfModelTestCase(TestCase):
         self.assertTrue(str(turf), turf.turf_name)
         self.assertEqual(turf.org.organization_name, 'Test Organization')
 
+    def tearDown(self):
+        self.test_organization.delete()
+        Turf.objects.all().delete()
+
 
 class TimeslotsModelTestCase(TestCase):
     """
@@ -105,3 +112,60 @@ class TimeslotsModelTestCase(TestCase):
         )
         self.assertTrue(str(timeslot), timeslot.start_time)
         self.assertEqual(timeslot.start_time, datetime.time(8, 00))
+
+    def tearDown(self):
+        self.test_org.delete()
+        self.test_turf.delete()
+        Timeslots.objects.all().delete()
+
+
+class BookingModelTestCase(TestCase):
+    """
+    Test for creating Booking str
+    representation
+    """
+    def setUp(self):
+        self.org = Organization.objects.create(
+            organization_name='Arena 256 Inc',
+            organization_email='arena@gmail.com',
+            user=sample_user(
+                email='turfmanager@gmail.com',
+                password='secret123'
+            ),
+            organization_location='Lubowa, Kampala'
+        )
+        self.test_turf = Turf.objects.create(
+            turf_name='Arena 256',
+            turf_image='/uploads/image/turf.png',
+            no_of_pitches=2,
+            org=self.org
+        )
+
+        self.timeslot = Timeslots.objects.create(
+            start_time=datetime.time(8, 00),
+            stop_time=datetime.time(9, 00),
+            price=5000,
+            turf=self.test_turf
+        )
+
+    def test_create_booking(self):
+        """
+        Test creating Booking object
+        """
+        booking = Booking.objects.create(
+            user=sample_user(
+                email='turfuser@gmail.com',
+                password='secret123'
+            ),
+            timeslot=self.timeslot,
+            date_booked=datetime.date(2020, 9, 11),
+            payment_method='MOBILE MONEY'
+        )
+        self.assertTrue(str(booking), booking.date_booked)
+        self.assertEqual(booking.date_booked, datetime.date(2020, 9, 11))
+
+    def tearDown(self):
+        self.test_turf.delete()
+        self.org.delete()
+        self.timeslot.delete()
+        Booking.objects.all().delete()

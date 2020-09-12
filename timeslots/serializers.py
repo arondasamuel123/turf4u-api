@@ -1,6 +1,8 @@
 from rest_framework import serializers
+from rest_framework.validators import UniqueValidator
 
-from turfapi.models import Timeslots
+from turfapi.models import Timeslots, Booking
+from user.serializers import UserSerializer
 
 
 class ListTimeslotsSerializer(serializers.ListSerializer):
@@ -17,3 +19,24 @@ class TimeslotsSerializer(serializers.ModelSerializer):
         model = Timeslots
         fields = ['id', 'start_time', 'stop_time', 'turf', 'price']
         list_serializer_class = ListTimeslotsSerializer
+
+
+class BookingsSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+    timeslot = TimeslotsSerializer(read_only=True)
+    date_booked = serializers.DateField(
+        validators=[UniqueValidator(
+            queryset=Booking.objects.all(),
+            message="The timeslot has already been booked"
+        )])
+
+    class Meta:
+        model = Booking
+        fields = [
+            'id',
+            'user',
+            'timeslot',
+            'date_booked',
+            'payment_method',
+            'payment_status'
+        ]

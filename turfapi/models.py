@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, \
     BaseUserManager
 from django.conf import settings
 from django.utils import timezone
+import datetime
 
 
 class UserManager(BaseUserManager):
@@ -78,6 +79,15 @@ class Timeslots(models.Model):
 
 
 class Booking(models.Model):
+    class PaymentMethod(models.TextChoices):
+        MOBILE_MONEY = 'MOBILE MONEY'
+        CASH = 'CASH'
+
+    class PaymentComplete(models.TextChoices):
+        PENDING = 'pending'
+        NOT_PAID = 'not_paid'
+        COMPLETE = 'complete'
+
     id = models.UUIDField(
         primary_key=True,
         default=uuid.uuid4,
@@ -88,4 +98,14 @@ class Booking(models.Model):
         on_delete=models.CASCADE
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    date_booked = models.DateField(default=timezone.now)
+    date_booked = models.DateField(default=datetime.date.today)
+    payment_method = models.CharField(
+        max_length=12,
+        choices=PaymentMethod.choices,
+        default=PaymentMethod.CASH
+    )
+    payment_status = models.CharField(
+        max_length=8,
+        choices=PaymentComplete.choices,
+        default=PaymentComplete.PENDING
+    )
