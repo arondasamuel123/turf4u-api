@@ -1,6 +1,7 @@
 from django.test import TestCase
 from rest_framework.test import APIClient
 from django.urls import reverse
+from django.utils import timezone
 from rest_framework import status
 from turfapi.models import User, Organization,\
     Turf
@@ -44,6 +45,7 @@ class PrivateAPITestCase(TestCase):
         self.org = Organization.objects.create(
             organization_name='Test Organization',
             organization_email='testorg@gmail.com',
+            organization_location='Test Location',
             contact_number='+254791019910',
             user=self.user
         )
@@ -56,13 +58,13 @@ class PrivateAPITestCase(TestCase):
         """
         Turf.objects.create(
             turf_name="Test Turf",
-            turf_location="Kampala",
+            no_of_pitches=2,
             turf_image="uploads/images/turf.jpg",
             org=self.org
         )
         Turf.objects.create(
             turf_name="The Hub Turf",
-            turf_location="Lubowa",
+            no_of_pitches=3,
             turf_image="uploads/images/hub.jpg",
             org=self.org
         )
@@ -78,7 +80,7 @@ class PrivateAPITestCase(TestCase):
         """
         self.payload = {
             "turf_name": "Greensports Turf",
-            "turf_location": "Valley Arcade",
+            "no_of_pitches": 2,
             "turf_image": "/uploads/images/green.jpg",
             "org": self.org.id
         }
@@ -93,7 +95,7 @@ class PrivateAPITestCase(TestCase):
         """
         self.payload = {
             "turf_name": "",
-            "turf_location": "Kampala",
+            "no_of_pitches": 2,
             "turf_image": "/uploads/images/test.jpg",
             "org": self.org.id
         }
@@ -108,6 +110,7 @@ class PrivateAPITestCase(TestCase):
         self.org_one = Organization.objects.create(
             organization_name="Turf FC",
             organization_email="turffc@gmail.com",
+            organization_location="FC Location",
             contact_number="+256712345678",
             user=self.user
         )
@@ -115,13 +118,13 @@ class PrivateAPITestCase(TestCase):
 
         Turf.objects.create(
             turf_name="Test turf",
-            turf_location="Test location",
+            no_of_pitches=2,
             turf_image="/uploads/images/test.jpg",
             org=self.org
         )
         Turf.objects.create(
             turf_name="Turf Stadium",
-            turf_location="Bukoto",
+            no_of_pitches=3,
             turf_image="/uploads/images/stadium.jpg",
             org=self.org_one
         )
@@ -135,15 +138,17 @@ class PrivateAPITestCase(TestCase):
         """
         payload = {
             "turf_name": "The hub Turf",
-            "turf_location": "Lubowa",
+            "no_of_pitches": 2,
             "turf_image": "upload/cloudinary/hub.png",
-            "org": self.org.id
+            "org": self.org.id,
+            "turf_created": timezone.now()
         }
         payload_two = {
             "turf_name": payload['turf_name'],
-            "turf_location": payload['turf_location'],
+            "no_of_pitches": payload['no_of_pitches'],
             "turf_image": payload['turf_image'],
-            "org": payload['org']
+            "org": payload['org'],
+            "turf_created": payload['turf_created']
         }
         url = create_turf_by_org(self.org.id)
 
@@ -163,6 +168,7 @@ class IsManagerPermissionTestCase(TestCase):
         self.org = Organization.objects.create(
             organization_name='Test Organization',
             organization_email='testorg@gmail.com',
+            organization_location='Test Location',
             contact_number='+254791019910',
             user=self.turf_user
         )
@@ -175,7 +181,7 @@ class IsManagerPermissionTestCase(TestCase):
         """
         payload = {
             "turf_name": "Arena Kampala",
-            "turf_location": "Kampala",
+            "no_of_pitches": 3,
             "turf_image": "/uploads/images/test.jpg",
             "org": self.org.id,
 
