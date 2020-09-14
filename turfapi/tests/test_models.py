@@ -70,7 +70,7 @@ class TurfModelTestCase(TestCase):
         turf = Turf.objects.create(
             turf_name="GreenSports Turf",
             no_of_pitches=2,
-            turf_image="/upload/images/greensports.jpg",
+            image_url="https://upload-turf-image.com/turf.png",
             org=self.test_organization
         )
 
@@ -99,7 +99,7 @@ class TimeslotsModelTestCase(TestCase):
         self.test_turf = Turf.objects.create(
             turf_name='Manarat School',
             no_of_pitches=2,
-            turf_image='/images/manarat.png',
+            image_url='/images/manarat.png',
             org=self.test_org
         )
 
@@ -136,7 +136,7 @@ class BookingModelTestCase(TestCase):
         )
         self.test_turf = Turf.objects.create(
             turf_name='Arena 256',
-            turf_image='/uploads/image/turf.png',
+            image_url='/uploads/image/turf.png',
             no_of_pitches=2,
             org=self.org
         )

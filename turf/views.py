@@ -5,8 +5,11 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from turfapi.models import Turf, Organization, User
-from .serializers import TurfSerializer, OrgSerializer
+from .serializers import TurfSerializer, OrgSerializer, \
+    UpdateImageUrlSerializer
 from .permissions import IsTurfManager
+
+# Turf API Views
 
 
 class ListTurfs(generics.ListAPIView):
@@ -46,6 +49,17 @@ class RetrieveTurfByOrg(generics.RetrieveAPIView):
         turfs = Turf.objects.filter(org_id=organization.id).all()
         serializer = TurfSerializer(turfs, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class UpdateImageUrlView(generics.UpdateAPIView):
+
+    authentication_classes = [TokenAuthentication, ]
+    permission_classes = [IsAuthenticated, IsTurfManager]
+    serializer_class = UpdateImageUrlSerializer
+    queryset = Turf.objects.all()
+
+
+# Organization API Views
 
 
 class CreateOrg(generics.CreateAPIView):

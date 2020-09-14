@@ -61,7 +61,7 @@ class Turf(models.Model):
         editable=False)
     turf_name = models.CharField(max_length=255)
     no_of_pitches = models.IntegerField(default=1)
-    turf_image = models.CharField(max_length=255)
+    image_url = models.URLField(max_length=255, null=True)
     org = models.ForeignKey(Organization, on_delete=models.CASCADE)
     turf_created = models.DateTimeField(default=timezone.now)
 
