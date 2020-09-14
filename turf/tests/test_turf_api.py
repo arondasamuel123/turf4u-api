@@ -15,6 +15,10 @@ def get_turf_by_org(org_id):
     return reverse('turf-get-org', args=[org_id])
 
 
+def get_turf_by_id(turf_id):
+    return reverse('update-image-url', args=[turf_id])
+
+
 def create_turf_by_org(org_id):
     return reverse('turf-create', args=[org_id])
 
@@ -49,6 +53,7 @@ class PrivateAPITestCase(TestCase):
             contact_number='+254791019910',
             user=self.user
         )
+
         self.client = APIClient()
         self.client.force_authenticate(self.user)
 
@@ -59,13 +64,13 @@ class PrivateAPITestCase(TestCase):
         Turf.objects.create(
             turf_name="Test Turf",
             no_of_pitches=2,
-            turf_image="uploads/images/turf.jpg",
+            image_url="uploads/images/turf.jpg",
             org=self.org
         )
         Turf.objects.create(
             turf_name="The Hub Turf",
             no_of_pitches=3,
-            turf_image="uploads/images/hub.jpg",
+            image_url="https://upload-turf-image.com/hub.png",
             org=self.org
         )
         res = self.client.get(TURF_URL)
@@ -81,7 +86,6 @@ class PrivateAPITestCase(TestCase):
         self.payload = {
             "turf_name": "Greensports Turf",
             "no_of_pitches": 2,
-            "turf_image": "/uploads/images/green.jpg",
             "org": self.org.id
         }
         url = create_turf_by_org(self.org.id)
@@ -96,7 +100,6 @@ class PrivateAPITestCase(TestCase):
         self.payload = {
             "turf_name": "",
             "no_of_pitches": 2,
-            "turf_image": "/uploads/images/test.jpg",
             "org": self.org.id
         }
         url = create_turf_by_org(self.org.id)
@@ -119,13 +122,13 @@ class PrivateAPITestCase(TestCase):
         Turf.objects.create(
             turf_name="Test turf",
             no_of_pitches=2,
-            turf_image="/uploads/images/test.jpg",
+            image_url="/uploads/images/test.jpg",
             org=self.org
         )
         Turf.objects.create(
             turf_name="Turf Stadium",
             no_of_pitches=3,
-            turf_image="/uploads/images/stadium.jpg",
+            image_url="/uploads/images/stadium.jpg",
             org=self.org_one
         )
         res = self.client.get(url)
@@ -139,14 +142,12 @@ class PrivateAPITestCase(TestCase):
         payload = {
             "turf_name": "The hub Turf",
             "no_of_pitches": 2,
-            "turf_image": "upload/cloudinary/hub.png",
             "org": self.org.id,
             "turf_created": timezone.now()
         }
         payload_two = {
             "turf_name": payload['turf_name'],
             "no_of_pitches": payload['no_of_pitches'],
-            "turf_image": payload['turf_image'],
             "org": payload['org'],
             "turf_created": payload['turf_created']
         }
@@ -156,6 +157,45 @@ class PrivateAPITestCase(TestCase):
         res_two = self.client.post(url, payload_two)
         self.assertEqual(res_one.status_code, status.HTTP_201_CREATED)
         self.assertEqual(res_two.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_upload_image_url(self):
+        """
+        Test that a valid image_url has been inserted
+        for a specific turf
+        """
+        self.test_turf = Turf.objects.create(
+            turf_name="Test turf",
+            no_of_pitches=2,
+            org=self.org
+        )
+        payload = {
+            "image_url": "http://res.upload.com/gdgfdsg.png"
+        }
+        url = get_turf_by_id(self.test_turf.id)
+        res = self.client.patch(url, payload)
+        self.test_turf.refresh_from_db()
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(self.test_turf.image_url, payload['image_url'])
+        self.test_turf.delete()
+
+    def test_invalid_url(self):
+        """
+        Test to check if an invalid url has been entered
+        """
+        self.test_turf = Turf.objects.create(
+            turf_name="Test turf",
+            no_of_pitches=2,
+            org=self.org
+        )
+
+        payload = {
+            "image_url": "fsadgdagasf.com"
+        }
+        url = get_turf_by_id(self.test_turf.id)
+        res = self.client.patch(url, payload)
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+        self.test_turf.delete()
 
     def tearDown(self):
         self.org.delete()
@@ -188,7 +228,6 @@ class IsManagerPermissionTestCase(TestCase):
         payload = {
             "turf_name": "Arena Kampala",
             "no_of_pitches": 3,
-            "turf_image": "/uploads/images/test.jpg",
             "org": self.org.id,
 
         }

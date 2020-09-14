@@ -52,3 +52,11 @@ class TurfSerializer(serializers.ModelSerializer):
                 message="Turf already exists"
             )
         ]
+
+
+class UpdateImageUrlSerializer(serializers.ModelSerializer):
+    image_url = serializers.URLField()
+
+    class Meta:
+        model = Turf
+        fields = ['id', 'image_url']

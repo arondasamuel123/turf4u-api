@@ -47,7 +47,7 @@ class PublicAPITestCase(TestCase):
 
         self.turf = sample_turf(
             turf_name="Arena KLA Turf",
-            turf_image="/upload/images/turf.png",
+            image_url="/upload/images/turf.png",
             no_of_pitches=2,
             org=self.org
         )
@@ -96,7 +96,7 @@ class PrivateAPITestCase(TestCase):
         self.turf = sample_turf(
             turf_name='The Hub Turf',
             no_of_pitches=2,
-            turf_image="/upload/images/turf.jpg",
+            image_url="/upload/images/turf.jpg",
             org=self.org
         )
         self.ts = Timeslots.objects.create(
@@ -218,7 +218,7 @@ class IsManagerPermissionTestCase(TestCase):
         self.turf = sample_turf(
             turf_name='The Hub Turf',
             no_of_pitches=2,
-            turf_image="/upload/images/turf.jpg",
+            image_url="/upload/images/turf.jpg",
             org=self.org
         )
         self.ts = Timeslots.objects.create(

@@ -49,7 +49,7 @@ class PublicAPITestCase(TestCase):
         self.turf = Turf.objects.create(
             turf_name="Arena One",
             no_of_pitches=2,
-            turf_image='/image/turf.png',
+            image_url="https://upload-turf-image.com/hub.png",
             org=self.org
         )
 
@@ -81,7 +81,7 @@ class PrivateAPITestCase(TestCase):
         self.turf = Turf.objects.create(
             turf_name="Arena One",
             no_of_pitches=2,
-            turf_image='/image/turf.png',
+            image_url="https://upload-turf-image.com/hub.png",
             org=self.org
         )
         self.client.force_authenticate(self.user)
@@ -174,7 +174,7 @@ class PrivateAPITestCase(TestCase):
         self.turf_two = Turf.objects.create(
             turf_name="Arena 256",
             no_of_pitches=3,
-            turf_image='/upload/img/turf.jpg',
+            image_url="https://upload-turf-image.com/hub.png",
             org=self.org
         )
         Timeslots.objects.create(
