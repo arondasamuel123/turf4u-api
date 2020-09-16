@@ -1,0 +1,6 @@
+Thank you for choosing Turf4u. Where you can find a turf best suited for you 
+
+Now before you can  get started 
+We would like you to confirm your email address by clicking the link below
+
+{{confirmation_url}}

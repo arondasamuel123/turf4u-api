@@ -3,6 +3,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, \
     BaseUserManager
 from django.conf import settings
+from django.core import signing
 from django.utils import timezone
 import datetime
 
@@ -38,6 +39,12 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
+
+    def get_email(self):
+        return self.email
+
+    def generate_confirmation_token(self):
+        return signing.dumps({'user_email': self.get_email()})
 
 
 class Organization(models.Model):

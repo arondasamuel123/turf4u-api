@@ -7,5 +7,6 @@ app_name = 'user'
 urlpatterns = [
     path('register/', views.RegisterUser.as_view(), name='register-user'),
     path('token/', views.CustomObtainToken.as_view(), name='obtain-token'),
-    path('profile/', views.RetrieveUpdateUser.as_view(), name='profile')
+    path('profile/', views.RetrieveUpdateUser.as_view(), name='profile'),
+    path('activate', views.AccountActivationView.as_view(), name='activate')
 ]
