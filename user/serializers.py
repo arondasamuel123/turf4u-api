@@ -29,6 +29,10 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
 
+class QueryTokenSerializer(serializers.Serializer):
+    token = serializers.CharField(min_length=1)
+
+
 class AuthTokenSerializer(serializers.Serializer):
     """
     Serializer to obtain token using email

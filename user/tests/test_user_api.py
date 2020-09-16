@@ -38,6 +38,7 @@ class UserPublicAPITestCase(TestCase):
         user = User.objects.get(**res.data)
         self.assertTrue(user.check_password(payload['password']))
         self.assertNotIn('password', res.data)
+        self.assertFalse(user.is_active)
 
     def test_create_invalid_password(self):
         """
