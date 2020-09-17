@@ -10,18 +10,31 @@ info:
     name: "Apache 2.0"
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
 host: "turf4u-sandbox.herokuapp.com"
-basePath: "/v1"
+basePath: "/"
 tags:
 - name: "user"
   description: "Operations about user"
-  externalDocs:
-    description: "Find out more about our store"
-    url: "http://swagger.io"
+  
+- name: "organizations"
+  description: "Operations about organizations"
+  
+- name: "turfs"
+  description: "Operations about turfs"
+  
+- name: "timeslots"
+  description: "Operations about timeslots"
+  
+- name: "booking"
+  description: "Operations about bookings"
+  
+- name: "account activation"
+  description: "Activate user account"
+  
 schemes:
 - "https"
 - "http"
 paths:
-  /organizations:
+  /api/organizations/create:
     post:
       tags:
       - "organizations"
@@ -38,33 +51,19 @@ paths:
         schema:
           $ref: "#/definitions/Organization"
       responses:
-        "405":
+        "400":
           description: "Invalid input"
-      security:
-      - BasicAuth: []
-    
-    get:
-      tags:
-      - "organizations"
-      summary: "Returns a list of organizations"
-      description: "Returns list of organizations created"
-      operationId: "getOrganizations"
-      produces:
-      - "application/json"
-      parameters: []
-      responses:
-        "200":
+        "201":
           description: "successful operation"
           schema:
-              type: "array"
-              items:
-                $ref: '#/definitions/Organization'
+            $ref: "#/definitions/Organization"
       security:
       - BasicAuth: []
     
+    
   
   
-  /organization/{orgId}:
+  /api/organizations/{orgId}:
     get:
       tags:
       - "organizations"
@@ -75,6 +74,66 @@ paths:
       - "application/json"
       parameters:
       - name: "orgId"
+        in: "path"
+        description: "ID of organization to return"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Organization"
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Organization not found"
+      security:
+      - BasicAuth: []
+    patch:
+      tags:
+      - "organizations"
+      summary: "Update an organization by ID"
+      description: ""
+      operationId: "updatePetWithForm"
+      consumes:
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "orgId"
+        in: "path"
+        description: "ID of pet that needs to be updated"
+        required: true
+        type: "integer"
+        format: "int64"
+      
+      - in: "body"
+        name: "body"
+        description: "Update any field in Organization object"
+        required: true
+        schema:
+          $ref: "#/definitions/Organization"
+        
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Organization"
+      security:
+      - BasicAuth: []
+      
+  /organizations/{userId}:
+    get:
+      tags:
+      - "organizations"
+      summary: "Find organiztion by ID"
+      description: "Returns a single organization"
+      operationId: "getOrgByUser"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "userId"
         in: "path"
         description: "ID of pet to return"
         required: true
@@ -91,63 +150,9 @@ paths:
           description: "Organization not found"
       security:
       - BasicAuth: []
-    put:
-      tags:
-      - "organizations"
-      summary: "Updates a pet in the store with form data"
-      description: ""
-      operationId: "updatePetWithForm"
-      consumes:
-      - "application/x-www-form-urlencoded"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "orgId"
-        in: "path"
-        description: "ID of pet that needs to be updated"
-        required: true
-        type: "integer"
-        format: "int64"
-      - name: "name"
-        in: "formData"
-        description: "Updated name of the pet"
-        required: false
-        type: "string"
-      - name: "status"
-        in: "formData"
-        description: "Updated status of the pet"
-        required: false
-        type: "string"
-      responses:
-        "405":
-          description: "Invalid input"
-      security:
-      - BasicAuth: []
-    delete:
-      tags:
-      - "organizations"
-      summary: "Deletes an organization"
-      description: ""
-      operationId: "deleteOrganization"
-      produces:
-      - "application/json"
-      parameters:
+    
       
-      - name: "orgId"
-        in: "path"
-        description: "Organization id to delete"
-        required: true
-        type: "string"
-      responses:
-        "400":
-          description: "Invalid orgId supplied"
-        "404":
-          description: "Organization not found"
-      security:
-      - BasicAuth: []
-  
-      
-  /turfs:
+  /api/turfs:
     get:
       tags:
       - "turfs"
@@ -167,23 +172,27 @@ paths:
             
       security:
       - BasicAuth: []
-  /turfs/create:
+  /api/turfs/create/{orgId}:
     post:
       tags:
       - "turfs"
       summary: "Create a turf "
       description: ""
-      operationId: "CreateTurf"
+      operationId: "Create"
       produces:
-      - "application/xml"
       - "application/json"
       parameters:
       - in: "body"
         name: "body"
         description: "Turf created"
         required: true
-        schema:
-          $ref: '#/definitions/Turf'
+        
+      - in: "path"
+        name: "orgId"
+        description: "Organization Id associated with a turf"
+        required: true
+        type: "string"
+        
       responses:
         "200":
           description: "successful operation"
@@ -193,18 +202,18 @@ paths:
           description: "Invalid Turf creation"
       security:
       - BasicAuth: []
-  /turf/{turfId}:
+  /api/turfs/{orgId}:
     get:
       tags:
       - "turfs"
-      summary: "Find turf by ID"
+      summary: "Find turf by org id"
       description: "ID will be randomly generated UUID numbers"
       operationId: "getTurfById"
       produces:
       - "application/xml"
       - "application/json"
       parameters:
-      - name: "turfId"
+      - name: "orgId"
         in: "path"
         description: "ID of turf that needs to be fetched"
         required: true
@@ -216,38 +225,18 @@ paths:
           schema:
             $ref: "#/definitions/Turf"
         "400":
-          description: "Invalid ID supplied"
+          description: "Invalid input"
         "404":
-          description: "Turf not found"
+          description: "Org not found"
       security:
       - BasicAuth: []
-    delete:
+    
+    
+  /api/turfs/upload/{turfId}:
+    patch:
       tags:
       - "turfs"
-      summary: "Delete turf by ID"
-      description: "ID will be randomly generated UUID numbers"
-      operationId: "deleteOrder"
-      produces:
-      - "application/xml"
-      - "application/json"
-      parameters:
-      - name: "turfId"
-        in: "path"
-        description: "ID of the turf that needs to be deleted"
-        required: true
-        type: "string"
-      responses:
-        "400":
-          description: "Invalid ID supplied"
-        "404":
-          description: "Turf not found"
-      security:
-      - BasicAuth: []
-  /turf/{turfId}/uploadImage:
-    post:
-      tags:
-      - "turfs"
-      summary: "uploads an image"
+      summary: "update turf image field"
       description: ""
       operationId: "uploadFile"
       consumes:
@@ -276,10 +265,14 @@ paths:
           description: "successful operation"
           schema:
             $ref: "#/definitions/ApiResponse"
+        "400":
+          description: "Invalid Input"
+        "404":
+          description: "Turf not found"
       security:
       - BasicAuth: []
     
-  /user:
+  /user/register/:
     post:
       tags:
       - "user"
@@ -298,9 +291,11 @@ paths:
       responses:
         default:
           description: "successful operation"
+        "400":
+          description: "Invalid input"
   
 
-  /user/login:
+  /user/obtain-token/:
     post:
       tags:
       - "user"
@@ -336,42 +331,23 @@ paths:
               description: "date in UTC when token expires"
         "400":
           description: "Invalid username/password supplied"
-  /user/logout:
-    get:
-      tags:
-      - "user"
-      summary: "Logs out current logged in user session"
-      description: ""
-      operationId: "logoutUser"
-      produces:
-      - "application/json"
-      parameters: []
-      responses:
-        default:
-          description: "successful operation"
+  
       
-  /user/{userId}:
+  /user/profile:
     get:
       tags:
       - "user"
-      summary: "Get user by user name"
+      summary: "Get user"
       description: ""
       operationId: "getUserByName"
       produces:
       - "application/json"
-      parameters:
-      - name: "userId"
-        in: "path"
-        description: "The name that needs to be fetched. Use user1 for testing. "
-        required: true
-        type: "string"
+      
       responses:
         "200":
           description: "successful operation"
           schema:
             $ref: "#/definitions/User"
-        "400":
-          description: "Invalid username supplied"
         "404":
           description: "User not found"
       
@@ -386,11 +362,6 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - name: "userId"
-        in: "path"
-        description: "name that need to be updated"
-        required: true
-        type: "string"
       - in: "body"
         name: "body"
         description: "Updated user object"
@@ -399,34 +370,19 @@ paths:
           $ref: "#/definitions/User"
       responses:
         "400":
-          description: "Invalid user supplied"
+          description: "Invalid input"
         "404":
           description: "User not found"
+        "200":
+          description: "User updated"
+          schema:
+            $ref: "#/definitions/User"
       security:
       - BasicAuth: []
-    delete:
-      tags:
-      - "user"
-      summary: "Delete user"
-      description: "This can only be done by the logged in user."
-      operationId: "deleteUser"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "userId"
-        in: "path"
-        description: "The name that needs to be deleted"
-        required: true
-        type: "string"
-      responses:
-        "400":
-          description: "Invalid username supplied"
-        "404":
-          description: "User not found"
-      security:
-      - BasicAuth: []
+    
+      
   
-  /schedule/{turfId}:
+  /api/timeslots/{turfId}:
     post:
       tags:
       - "timeslots"
@@ -448,12 +404,19 @@ paths:
         description: "Created timeslot  object"
         required: true
         schema:
-          $ref: "#/definitions/TimeSlots"
+          type: "array"
+          items:
+            $ref: '#/definitions/TimeSlots'
       responses:
-        "200":
+        "201":
           description: "successful operation"
           schema:
-            $ref: "#/definitions/ApiResponse"
+              type: "array"
+              items:
+                $ref: '#/definitions/TimeSlots'
+        "400":
+          description: "Invalid input"
+        
       security:
       - BasicAuth: []
     get:
@@ -479,9 +442,9 @@ paths:
               items:
                 $ref: '#/definitions/TimeSlots'
         "400":
-          description: "Invalid turfId supplied"
+          description: "Invalid input"
         "404":
-          description: "turfId not found"
+          description: "Turf not found"
       security:
       - BasicAuth: []
           
@@ -508,34 +471,156 @@ paths:
           $ref: "#/definitions/TimeSlots"
       responses:
         "400":
-          description: "Invalid turf id supplied"
+          description: "Invalid input"
         "404":
           description: "Turf not found"
+        "200":
+          description: "TImeslot updated"
+          schema:
+            $ref: "#/definitions/TimeSlots"
       security:
       - BasicAuth: []
-    delete:
+    
+    
+  /api/book/{timeslotsId}:
+    post:
       tags:
-      - "timeslots"
-      summary: "Delete timeslots by turf id "
-      description: "This can only be done by the logged in by turf manager."
-      operationId: "deleteTimeslotsbyTurfId"
-      produces:
-      - "application/json"
+      - "booking"
+      summary: "Make a boooking for a specific timeslot"
+      description: "User can make a booking for a specific timeslot"
+      operationId: "makeBooking"
+      
       parameters:
-      - name: "turfId"
+      - name: "timeslotsId"
         in: "path"
-        description: "ID of booking based on user"
+        description: "ID of timeslot"
         required: true
         type: "string"
       responses:
+        "201":
+          description: "successful operation"
+          schema:
+            $ref: '#/definitions/Booking'
         "400":
-          description: "Invalid userId supplied"
-        "404":
-          description: "UserId not found"
+          description: "Invalid input"
       security:
       - BasicAuth: []
-          
-    
+            
+  /api/bookings/{timeslotsId}:
+    get:
+      tags:
+      - "booking"
+      summary: "Get bookings made for a specific timeslot"
+      description: "Manager can know which bookings have been made for a timeslot"
+      operationId: "getBookingsBytimeslotId"
+      
+      parameters:
+      - name: "timeslotsId"
+        in: "path"
+        description: "ID of timeslot"
+        required: true
+        type: "string"
+      
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items: 
+              $ref: '#/definitions/Booking'
+      security:
+      - BasicAuth: []
+  
+  /api/user/bookings/:
+    get:
+      tags:
+      - "booking"
+      summary: "Get bookings for a specific user"
+      description: "Turf users can view the bookings they have made"
+      operationId: "getBookingByUser"
+      
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items: 
+              $ref: '#/definitions/Booking'
+      security:
+      - BasicAuth: []
+  
+  /api/booking/{bookingId}:
+    patch:
+      tags:
+      - "booking"
+      summary: "Manager can update the bookings payment status"
+      description: "Turf Managers can update the payment status of booking either to complete or not paid"
+      operationId: "updateBookingbyId"
+      
+      parameters:
+      - name: "bookingId"
+        in: "path"
+        description: "ID of booking"
+        required: true
+        type: "string"
+      
+      - in: "body"
+        name: "body"
+        description: "Updated timeslot object"
+        required: true
+        schema:
+          $ref: "#/definitions/Booking"
+      
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: '#/definitions/Booking'
+      security:
+      - BasicAuth: []
+            
+    delete:
+      tags:
+      - "booking"
+      summary: "Delete booking by ID"
+      description: "Manager can delete a booking when payment is complete"
+      operationId: "deleteBookingById"
+      
+      parameters:
+      - name: "bookingId"
+        in: "path"
+        description: "ID of booking"
+        required: true
+        type: "string"
+        
+      responses:
+        "204":
+          description: "Booking deleted"
+      security:
+      - BasicAuth: []
+      
+  /activate:
+    post:
+      tags:
+      - "account activation"
+      summary: "Validate token provided in query parameter"
+      description: "This request will validate the token generated for a user when confirming an email"
+      operationId: "ValidateToken"
+      
+      parameters:
+      - name: "token"
+        in: "query"
+        type: "string"
+        description: "The actual token that will be provided to the user"
+      
+      responses:
+        "200":
+          description: "Account activated"
+        "400":
+          description: "Invalid token provided"
+      
+  
+
     
           
 securityDefinitions:
@@ -548,13 +633,10 @@ definitions:
       id:
         type: "integer"
         format: "int64"
-      userId:
-        type: "integer"
-        format: "int64"
       turf_name:
         type: "string"
-      turf_location:
-        type: "string"
+      no_of_pitches:
+        type: "integer"
       turf_image:
         type: "string"
       orgId:
@@ -575,6 +657,12 @@ definitions:
         type: "string"
       organization_email:
         type: "string"
+      organization_tin:
+        type: "integer"
+      org_certificate:
+        type: "string"
+      is_verified:
+        type: "boolean"
         
     xml:
       name: "Organization"
@@ -588,12 +676,8 @@ definitions:
         type: "string"
       password:
         type: "string"
-      userRole:
-        type: "string"
-        description: "User Role"
-        enum:
-        - "Turf User"
-        - "Turf Manager"
+      is_manager:
+        type: "boolean"
         
     xml:
       name: "User"
@@ -609,12 +693,41 @@ definitions:
       turfId:
         type: "integer"
         format: "int64"
-      timeslot:
+      start_time:
         type: "string"
         format: "time"
-      isbooked:
-        type: "boolean"
+      stop_time:
+        type: "string"
+        format: "time"
+      price:
+        type: "integer"
+    xml:
+      name: "Timeslots"
+      
+  
+  Booking:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      userId:
+        type: "integer"
+        format: "int64"
+      timeslotId:
+        type: "integer"
+        format: "int64"
+      date_booked:
+        type: "string"
+        format: "date"
+      payment_method:
+        type: "string"
         
+      payment_status:
+        type: "string"
+    xml:
+      name: "Booking"
+  
   ApiResponse:
     type: "object"
     properties:
@@ -625,6 +738,3 @@ definitions:
         type: "string"
       message:
         type: "string"
-externalDocs:
-  description: "Find out more about Swagger"
-  url: "http://swagger.io"
