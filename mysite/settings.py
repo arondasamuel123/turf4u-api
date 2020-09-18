@@ -27,7 +27,6 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG')
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
-MODE = config('MODE', default='development')
 # Application definition
 
 INSTALLED_APPS = [
@@ -78,31 +77,12 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
-if config('MODE') == 'development':
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': config('DATABASE_NAME'),
-            'USER': config('DATABASE_USER'),
-            'PASSWORD': config('DATABASE_PASSWORD')
-        }
-    }
-elif config('MODE') == 'testing':
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': config('DATABASE_NAME'),
-            'USER': config('DATABASE_USER'),
-            'PASSWORD': config('DATABASE_PASSWORD'),
-            'HOST': config('DATABASE_HOST')
-        }
-    }
-else:
-    DATABASES = {
-        'default': dj_database_url.config(
-            default=config('DATABASE_URL')
-        )
-    }
+
+DATABASES = {
+    'default': dj_database_url.config(
+        default=config('DATABASE_URL')
+    )
+}
 
 
 # Password validation
