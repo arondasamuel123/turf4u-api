@@ -3,8 +3,6 @@ jobs:
   build:
     docker:
       - image: circleci/python:3.8
-        environment:
-          DATABASE_URL: postgres://root:postgres@localhost:5432/circle_test
       - image: circleci/postgres:latest
         environment:
           POSTGRES_USER: root
