@@ -1,4 +1,19 @@
-version: 2
+version: 2.1
+
+orbs:
+  heroku: circleci/heroku@1.0.1
+
+
+workflows:
+  heroku_deploy:
+    jobs:
+      - build
+      - heroku/deploy-via-git:
+          requires:
+            - build
+          filters:
+            branches:
+              only: dev
 jobs:
   build:
     docker:
@@ -19,7 +34,7 @@ jobs:
           command:  |
             pip install pipenv
             pipenv install -d
-      - save-cache:
+      - save_cache:
           key: deps9-{{ .Branch}}-{{checksum "Pipfile.lock"}}
           paths:
             - ".venv"
